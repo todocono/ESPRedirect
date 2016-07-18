@@ -3,6 +3,9 @@ we are working on the Taipei Hackerspace website https://taipeihack.org/#open
 this is the repo of the website https://github.com/taipeihackerspace/webtemp/
 this is the script https://github.com/taipeihackerspace/webtemp/blob/gh-pages/js/hackerspace.js
 
+we forked from https://github.com/electronicsguy/ESP8266/tree/master/HTTPSRedirect
+
+
 
 # HTTPS Redirect for ESP8266
 
