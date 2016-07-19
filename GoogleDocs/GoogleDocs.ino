@@ -23,6 +23,20 @@
 #define D7 13
 #define D8 15   //needs to be open when flashing
 
+#include <Adafruit_NeoPixel.h> // Led setting
+#define PIN D2 // Led pin
+// Parameter 1 = number of pixels in strip
+// Parameter 2 = Arduino pin number (most are valid)
+// Parameter 3 = pixel type flags, add together as needed:
+//   NEO_KHZ800  800 KHz bitstream (most NeoPixel products w/WS2812 LEDs)
+//   NEO_KHZ400  400 KHz (classic 'v1' (not v2) FLORA pixels, WS2811 drivers)
+//   NEO_GRB     Pixels are wired for GRB bitstream (most NeoPixel products)
+//   NEO_RGB     Pixels are wired for RGB bitstream (v1 FLORA pixels, not v2)
+//   NEO_RGBW    Pixels are wired for RGBW bitstream (NeoPixel RGBW products)
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(12, PIN, NEO_GRB + NEO_KHZ800);
+
+
+
 #include <ESP8266WiFi.h>
 #include "HTTPSRedirect.h"
 
@@ -137,6 +151,9 @@ void setup() {
 
   pinMode(D1, INPUT); // a switch
   pinMode(D0, OUTPUT); // an onboard LED
+
+  strip.begin(); // Led setting
+  strip.show(); // Initialize all pixels to 'off'
 }
 
 void loop() {
@@ -150,12 +167,20 @@ void loop() {
   newState = digitalRead(D1);
   Serial.print( "read a: " );
   Serial.println( newState );
-  
+
   // We use D1 as an input to read wether a switch has been flipped or not
   // Here could be the right spot to expand into RFID or other behaviors
   if (newState != oldState ) {
     oldState = newState;            // changes the state
     digitalWrite( D0, LOW); // switches an LED
+    if ( newState ) {
+      static int r =random(255);
+      static int g =random(255);
+      static int b =random(255);
+      colorWipe(strip.Color(r, g, b), 200); // Random color
+    } else {
+      colorWipe(strip.Color(0, 0, 0), 50); //  off
+    }
     Serial.println( "state changed" );
     userID = newState;              //here we can input the ID from the user
 
@@ -170,8 +195,47 @@ void loop() {
   }
 
 
+
+
+
   // this is note from Sujay, the original author. We didn't register any reboots on NodeMCU:
   // In my testing on a ESP-01, a delay of less than 1500 resulted
   // in a crash and reboot after about 50 loop runs.
   delay(1500);
+}
+
+void colorWipe(uint32_t c, uint8_t wait) {
+  for (uint16_t i = 0; i < strip.numPixels(); i++) {
+    strip.setPixelColor(i, c);
+    strip.show();
+    delay(wait);
+  }
+}
+
+void rainbow(uint8_t wait) {
+  uint16_t i, j;
+
+  for (j = 0; j < 256; j++) {
+    for (i = 0; i < strip.numPixels(); i++) {
+      strip.setPixelColor(i, Wheel((i + j) & 255));
+    }
+    strip.show();
+    delay(wait); //display to the pixels:
+    colorWipe(strip.Color(255, 0, 0), 50); // Red
+  }
+}
+
+// Input a value 0 to 255 to get a color value.
+// The colours are a transition r - g - b - back to r.
+uint32_t Wheel(byte WheelPos) {
+  WheelPos = 255 - WheelPos;
+  if (WheelPos < 85) {
+    return strip.Color(255 - WheelPos * 3, 0, WheelPos * 3);
+  }
+  if (WheelPos < 170) {
+    WheelPos -= 85;
+    return strip.Color(0, WheelPos * 3, 255 - WheelPos * 3);
+  }
+  WheelPos -= 170;
+  return strip.Color(WheelPos * 3, 255 - WheelPos * 3, 0);
 }
