@@ -1,9 +1,56 @@
-we are working on the Taipei Hackerspace website https://taipeihack.org/#open
 
-this is the repo of the website https://github.com/taipeihackerspace/webtemp/
-this is the script https://github.com/taipeihackerspace/webtemp/blob/gh-pages/js/hackerspace.js
 
-we forked from https://github.com/electronicsguy/ESP8266/tree/master/HTTPSRedirect
+# Project Description
+This is the working version for the Taipei Hackerspace Door. It is based on an ESP8266 with a Google Script that updates an online spreadsheet. The HTML website pulls a local JS that updates a div container.
+
+#1. Website
+Their website is at https://taipeihack.org/#open .
+
+ ## 1.1.1 Website Repo
+ This is the repo of the website https://github.com/taipeihackerspace/webtemp/
+
+ ## 1.1.2 Website JS to update the AJAX at the HTML
+This is the script:
+https://github.com/taipeihackerspace/webtemp/blob/gh-pages/js/hackerspace.js
+
+#2. Google Spreadsheet
+
+This is the link for the spreadsheet:
+https://docs.google.com/spreadsheets/d/1EjDXjxsU1T6WPc_2eDv9oyeZjQBobPMp4C9s1Qw9QYs/edit?ts=578c6274#gid=1720119013
+
+#3 Firmware
+
+##3.1
+At the repo it is published the working version http://github.todocono.com/ESPRedirect/GoogleDocs
+
+##3.2 Development Environment
+We used the Arduino IDE 1.6.8 with the ESP8266 board installed manually on the board manager (v2.3.0 stable)
+
+#4. Hardware
+
+## 4.1 NodeMCU
+ The main chipset used that was used was ESP8266 with the setup of a NodeMCU.
+
+## 4.2 Additional components
+  We used an swtich on D1 and an USB power adaptor.
+
+
+#5. Google Script
+
+Google Script hosted at https://script.google.com/macros/s/AKfycbwIoZSoplXOlg67FiBS1zdNO5APHmOVMpM8nWJ2Pwa3ny1cswc/exec
+Note that the script has to be published with authorization to be ran as the publisher, with access to anyone, including anonymous users. And that each time the script is updated, it is a requirement to update the version published.
+
+
+#6. Contributors to this setup
+Rudi, Kai, Raymond and Foucalt  
+
+#5. Project References
+
+- We forked from https://github.com/electronicsguy/ESP8266/tree/master/HTTPSRedirect . It's an extension of the work by Ivan Grokhotkov ([Ivan-github](https://github.com/esp8266/Arduino/blob/master/libraries/ESP8266WiFi/src/WiFiClientSecure.h)).
+*HTTPSRedirect*
+- We used intensively the post reference at https://mashe.hawksey.info/2014/07/google-sheets-as-a-database-insert-with-apps-script-using-postget-methods-with-ajax-example/
+- Samples of Google Spreadsheet API: https://developers.google.com/gdata/samples/spreadsheet_sample
+
 
 
 

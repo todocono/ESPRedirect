@@ -9,7 +9,7 @@
 #include "HTTPSRedirect.h"
 
 // from LarryD, Arduino forum
-//#define DEBUG   //If you comment this line, the DPRINT & DPRINTLN lines are defined as blank.
+#define DEBUG   //If you comment this line, the DPRINT & DPRINTLN lines are defined as blank.
 #ifdef DEBUG    //Macros are usually in all capital letters.
   #define DPRINT(...)    Serial.print(__VA_ARGS__)     //DPRINT is a macro, debug print
   #define DPRINTLN(...)  Serial.println(__VA_ARGS__)   //DPRINTLN is a macro, debug print with new line
@@ -48,7 +48,7 @@ bool HTTPSRedirect::printRedir(const char* url, const char* host, const char* re
   // http://serverfault.com/questions/163511/what-is-the-mandatory-information-a-http-request-header-must-contain
   String Request = createRequest(url, host);
 
-  DPRINTLN(Request);
+  (Request);
   // make request
   print(Request);
 
