@@ -30,6 +30,8 @@
 const char* ssid = "TPE-Hackerspace";
 const char* password = "HN74874666";
 
+static boolean newState;
+static boolean oldState;
 const char* host = "script.google.com";
 const char* googleRedirHost = "script.googleusercontent.com";
 const char *GScriptId = "AKfycbwIoZSoplXOlg67FiBS1zdNO5APHmOVMpM8nWJ2Pwa3ny1cswc";
@@ -143,22 +145,28 @@ void loop() {
   if (!client.connected())           // to keep the connection alive
     client.connect(host, httpsPort); // if it's disconnected, re-connect
 
-  static boolean state;
+  //the bug detected was that no actual post action was being done in here
+
+  newState = digitalRead(D1);
+  Serial.print( "read a: " );
+  Serial.println( newState );
+  
   // We use D1 as an input to read wether a switch has been flipped or not
   // Here could be the right spot to expand into RFID or other behaviors
-  if (digitalRead(D1) == HIGH && !state ) {
-    state = true;            // changes the state
-    digitalWrite( D0, HIGH); // switches an LED
-    Serial.println( "state changed to TRUE" );
-    userID = 1;
-    client.printRedir(urlOpen, host, googleRedirHost);
+  if (newState != oldState ) {
+    oldState = newState;            // changes the state
+    digitalWrite( D0, LOW); // switches an LED
+    Serial.println( "state changed" );
+    userID = newState;              //here we can input the ID from the user
+
+    String url = String("/macros/s/") + GScriptId + "/exec?value=" + userID;
+    client.printRedir(url, host, googleRedirHost);
   }
   else {
-    state = false;            // changes the state
-    digitalWrite( D0, LOW); // switches OFF the LED
-    Serial.println( "state changed to FALSE" );
+    digitalWrite( D0, HIGH); // switches OFF the LED
+    Serial.println( "nothing" );
     userID = 0;
-    client.printRedir(urlClose, host, googleRedirHost);
+    //client.printRedir(urlClose, host, googleRedirHost);
   }
 
 
