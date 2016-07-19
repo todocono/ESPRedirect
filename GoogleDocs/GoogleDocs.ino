@@ -14,7 +14,7 @@
 
 #include <Adafruit_NeoPixel.h>
 
-#define D0 16     //onboard LED 
+#define D0 16     //onboard LED
 #define D1 5
 #define D2 4
 #define D3 0
@@ -24,7 +24,9 @@
 #define D7 13
 #define D8 15   //needs to be open when flashing
 
+<<<<<<< HEAD
 #define PIN D2
+
 #include <ESP8266WiFi.h>
 #include "HTTPSRedirect.h"
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(12, PIN, NEO_GRB + NEO_KHZ800);
@@ -144,6 +146,9 @@ void setup() {
 
   pinMode(D1, INPUT); // a switch
   pinMode(D0, OUTPUT); // an onboard LED
+
+  strip.begin(); // Led setting
+  strip.show(); // Initialize all pixels to 'off'
 }
 
 void loop() {
@@ -163,13 +168,21 @@ void loop() {
   if (newState != oldState ) {
     oldState = newState;            // changes the state
     digitalWrite( D0, LOW); // switches an LED
+    if ( newState ) {
+      static int r =random(255);
+      static int g =random(255);
+      static int b =random(255);
+      colorWipe(strip.Color(r, g, b), 200); // Random color
+    } else {
+      colorWipe(strip.Color(0, 0, 0), 50); //  off
+    }
     Serial.println( "state changed" );
     userID = newState;              //here we can input the ID from the user
 
     String url = String("/macros/s/") + GScriptId + "/exec?value=" + userID;
     client.printRedir(url, host, googleRedirHost);
 
-  
+
   }
   else {
     digitalWrite( D0, HIGH); // switches OFF the LED
@@ -184,6 +197,7 @@ void loop() {
     else{
       colorWipe(strip.Color(0, 0, 0), 50); // turns them off
     }
+
   // this is note from Sujay, the original author. We didn't register any reboots on NodeMCU:
   // In my testing on a ESP-01, a delay of less than 1500 resulted
   // in a crash and reboot after about 50 loop runs.
@@ -258,6 +272,42 @@ void theaterChaseRainbow(uint8_t wait) {
         strip.setPixelColor(i + q, 0);      //turn every third pixel off
       }
     }
+  }
+}
+
+// Input a value 0 to 255 to get a color value.
+// The colours are a transition r - g - b - back to r.
+uint32_t Wheel(byte WheelPos) {
+  WheelPos = 255 - WheelPos;
+  if (WheelPos < 85) {
+    return strip.Color(255 - WheelPos * 3, 0, WheelPos * 3);
+  }
+  if (WheelPos < 170) {
+    WheelPos -= 85;
+    return strip.Color(0, WheelPos * 3, 255 - WheelPos * 3);
+  }
+  WheelPos -= 170;
+  return strip.Color(WheelPos * 3, 255 - WheelPos * 3, 0);
+}
+
+void colorWipe(uint32_t c, uint8_t wait) {
+  for (uint16_t i = 0; i < strip.numPixels(); i++) {
+    strip.setPixelColor(i, c);
+    strip.show();
+    delay(wait);
+  }
+}
+
+void rainbow(uint8_t wait) {
+  uint16_t i, j;
+
+  for (j = 0; j < 256; j++) {
+    for (i = 0; i < strip.numPixels(); i++) {
+      strip.setPixelColor(i, Wheel((i + j) & 255));
+    }
+    strip.show();
+    delay(wait); //display to the pixels:
+    colorWipe(strip.Color(255, 0, 0), 50); // Red
   }
 }
 
