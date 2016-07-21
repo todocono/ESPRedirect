@@ -167,14 +167,7 @@ void loop() {
   if (newState != oldState ) {
     oldState = newState;            // changes the state
     digitalWrite( D0, LOW); // switches an LED
-    if ( newState ) {
-      static int r =random(255);
-      static int g =random(255);
-      static int b =random(255);
-      colorWipe(strip.Color(r, g, b), 200); // Random color
-    } else {
-      colorWipe(strip.Color(0, 0, 0), 50); //  off
-    }
+   
     Serial.println( "state changed" );
     userID = newState;              //here we can input the ID from the user
 
