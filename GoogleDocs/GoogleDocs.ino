@@ -145,9 +145,6 @@ void setup() {
 
   pinMode(D1, INPUT); // a switch
   pinMode(D0, OUTPUT); // an onboard LED
-
-  strip.begin(); // Led setting
-  strip.show(); // Initialize all pixels to 'off'
 }
 
 void loop() {
